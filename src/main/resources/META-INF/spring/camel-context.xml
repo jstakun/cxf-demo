@@ -35,6 +35,7 @@
         <multicast>
             <to uri="cxfrs:bean:backendRESTService"/>
             <to uri="cxf:bean:backendSOAPService"/>
+            
         </multicast>
     </route>
 </camelContext>
