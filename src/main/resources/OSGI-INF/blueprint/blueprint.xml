@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<blueprint xmlns="http://www.osgi.org/xmlns/blueprint/v1.0.0"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xmlns:camel="http://camel.apache.org/schema/blueprint"
+           xmlns:cxf="http://camel.apache.org/schema/blueprint/cxf"
+           xmlns:cm="http://aries.apache.org/blueprint/xmlns/blueprint-cm/v1.0.0"
+           xmlns:jaxrs="http://cxf.apache.org/blueprint/jaxrs"
+           xsi:schemaLocation="
+             http://camel.apache.org/schema/blueprint http://camel.apache.org/schema/blueprint/camel-blueprint.xsd
+             http://camel.apache.org/schema/blueprint/cxf http://camel.apache.org/schema/blueprint/cxf/camel-cxf.xsd
+             http://aries.apache.org/blueprint/xmlns/blueprint-cm/v1.0.0 http://aries.apache.org/schemas/blueprint-cm/blueprint-cm-1.0.0.xsd
+             http://www.osgi.org/xmlns/blueprint/v1.0.0 http://www.osgi.org/xmlns/blueprint/v1.0.0/blueprint.xsd
+             http://cxf.apache.org/blueprint/jaxrs http://http://cxf.apache.org/schemas/blueprint/jaxrs.xsd">
+
+  <!-- Defined the real JAXRS back end service   -->
+  <jaxrs:server id="restService"
+                address="http://localhost:9091/rest" 
+                staticSubresourceResolution="true">
+    <jaxrs:serviceBeans>
+      <ref component-id="backendRESTService"/>
+    </jaxrs:serviceBeans>       
+  </jaxrs:server>
+ 
+  <bean id="backendRESTService" class="com.mycompany.camel.cxf.BackendRESTService" />
+  
+<cxf:rsServer id="restFrontend" address="http://localhost:9090/route" serviceClass="com.mycompany.camel.cxf.FrontendRESTService"/>
+<cxf:rsClient id="restBackend" address="http://localhost:9091/rest" serviceClass="com.mycompany.camel.cxf.BackendRESTService"/>
+
+<cxf:cxfEndpoint id="backendSOAPService"
+                   address="http://localhost:9092/backendsoapservice"
+                   endpointName="s:BackendSOAPPort"
+                   serviceName="s:BackendSOAPServiceService"
+                   serviceClass="com.mycompany.camel.cxf.BackendSOAPServicePortType"
+                   wsdlURL="wsdl/BackendSOAPService.wsdl"
+                   xmlns:s="http://cxf.camel.mycompany.com">
+    	<!-- cxf:properties>
+	        <entry key="dataFormat" value="CXF_MESSAGE"/>
+	    </cxf:properties-->
+    </cxf:cxfEndpoint>
+    
+ <bean id="realSOAPService" class="com.mycompany.camel.cxf.RealSOAPServiceBean"
+        init-method="start" destroy-method="stop">
+    	<!-- url of the real web service we have proxied -->
+    	<property name="url" value="http://localhost:9092/backendsoapservice"/>
+  	</bean>
+  	
+  	<bean id="soapProcessor" class="com.mycompany.camel.cxf.SOAPProcessor"></bean>
+
+  <camelContext xmlns="http://camel.apache.org/schema/blueprint">
+    <route>
+        <from uri="cxfrs:bean:restFrontend"/>
+        <to uri="cxfrs:bean:restBackend"/>
+        <process ref="soapProcessor"/>
+        <to uri="cxf:bean:backendSOAPService?dataFormat=MESSAGE"/>
+    </route>
+</camelContext>
+</blueprint>
