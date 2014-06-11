@@ -3,7 +3,7 @@ package com.mycompany.camel.spring;
 import javax.ws.rs.*;
 
 
-@Path("/frontendrestservice/")
+@Path("/restservice/")
 public class FrontendRESTService {
 	
 	public FrontendRESTService() {
@@ -11,10 +11,11 @@ public class FrontendRESTService {
 	}
 	
 	@GET
-    @Path("/getsomething/")
+    @Path("/getsomething/{input}/")
     @Produces("application/json")
-    public String getSomething() {
-        return null;
+    public String getSomething(@PathParam("input") String input) {
+		System.out.println("Called the frontend Service");
+        return "";
     }
 
 }

@@ -18,6 +18,7 @@ package com.mycompany.camel.spring;
 
 //import com.tmg.fuse.poc.account.InputAccount;
 import javax.xml.bind.JAXBElement;
+import javax.xml.ws.Holder;
 
 
 
@@ -31,9 +32,10 @@ public class BackendSOAPService implements BackendSOAPServicePortType {
 
 
 	@Override
-	public TradePrice getLastTradePrice(TradePriceRequest body) {
-		// TODO Auto-generated method stub
-		return null;
+	public String getLastTradePrice(String input) {
+		System.out.println("Called the SOAP service");
+		String result = input + " plus somethinig added by the SOAP service";
+		return result;
 	}
 
 	

@@ -3,7 +3,7 @@ package com.mycompany.camel.spring;
 import javax.ws.rs.*;
 
 
-@Path("/backendrestservice/")
+@Path("/restservice/")
 public class BackendRESTService {
 	
 	public BackendRESTService() {
@@ -11,10 +11,11 @@ public class BackendRESTService {
 	}
 	
 	@GET
-    @Path("/getsomething/")
+    @Path("/getsomething/{input}/")
     @Produces("application/json")
-    public String getSomething() {
-        return "something from the backend REST service";
+    public String getSomething(@PathParam("input") String input) {
+		System.out.println("Called the backend REST Service");
+        return input + " something added by the backend REST service";
     }
 
 }

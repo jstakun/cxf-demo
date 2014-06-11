@@ -9,29 +9,15 @@ targetNamespace="http://spring.camel.mycompany.com"
 
     <types>
        <xsd1:schema targetNamespace="http://spring.camel.mycompany.com">
-           <xsd1:element name="TradePriceRequest">
-              <xsd1:complexType>
-                  <xsd1:all>
-                      <xsd1:element name="tickerSymbol" type="xsd1:string"/>
-                  </xsd1:all>
-              </xsd1:complexType>
-           </xsd1:element>
-           <xsd1:element name="TradePrice">
-              <xsd1:complexType>
-                  <xsd1:all>
-                      <xsd1:element name="price" type="xsd1:float"/>
-                  </xsd1:all>
-              </xsd1:complexType>
-           </xsd1:element>
        </xsd1:schema>
     </types>
-
+ 
     <message name="GetLastTradePriceInput">
-        <part name="body" element="tns:TradePriceRequest"/>
+        <part name="input" type="xsd1:string"/>
     </message>
 
     <message name="GetLastTradePriceOutput">
-        <part name="body" element="tns:TradePrice"/>
+        <part name="output" type="xsd1:string"/>
     </message>
 
     <portType name="BackendSOAPServicePortType">
@@ -57,7 +43,7 @@ targetNamespace="http://spring.camel.mycompany.com"
     <service name="BackendSOAPServiceService">
         <documentation>My first service</documentation>
         <port name="BackendSOAPPort" binding="tns:BackendSOAPServiceBinding">
-           <soap:address location="http://0.0.0.0:9092/backendsoapservice"/>
+           <soap:address location="http://:9092/backendsoapservice"/>
         </port>
     </service>
 
