@@ -33,9 +33,9 @@
                    serviceClass="com.mycompany.camel.cxf.BackendSOAPServicePortType"
                    wsdlURL="wsdl/BackendSOAPService.wsdl"
                    xmlns:s="http://cxf.camel.mycompany.com">
-    	<!-- cxf:properties>
-	        <entry key="dataFormat" value="CXF_MESSAGE"/>
-	    </cxf:properties-->
+    	<cxf:properties>
+	        <entry key="dataFormat" value="MESSAGE"/>
+	    </cxf:properties>
     </cxf:cxfEndpoint>
     
  <bean id="realSOAPService" class="com.mycompany.camel.cxf.RealSOAPServiceBean"
@@ -48,10 +48,10 @@
 
   <camelContext xmlns="http://camel.apache.org/schema/blueprint">
     <route>
-        <from uri="cxfrs:bean:restFrontend"/>
-        <to uri="cxfrs:bean:restBackend"/>
-        <process ref="soapProcessor"/>
-        <to uri="cxf:bean:backendSOAPService?dataFormat=MESSAGE"/>
+       <from uri="cxfrs:bean:restFrontend"/>
+<to uri="cxfrs:bean:restBackend"/>
+<process ref="soapProcessor"/>
+<to uri="cxf:bean:backendSOAPService"/>
     </route>
 </camelContext>
 </blueprint>
