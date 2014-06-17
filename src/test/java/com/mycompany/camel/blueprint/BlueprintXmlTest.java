@@ -1,11 +1,14 @@
 package com.mycompany.camel.blueprint;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.ResponseBuilder;
 
 import org.apache.camel.EndpointInject;
-import org.apache.camel.Produce;
-import org.apache.camel.ProducerTemplate;
-import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.component.mock.MockEndpoint;
 import org.apache.camel.test.blueprint.CamelBlueprintTestSupport;
 import org.apache.cxf.jaxrs.client.WebClient;
@@ -22,19 +25,16 @@ public class BlueprintXmlTest extends CamelBlueprintTestSupport {
 	@Test
 	public void testCamelRoute() throws Exception {
 		
-	
-		
 		// Call the REST endpoint
 		WebClient client = WebClient.create(ENDPOINT_ADDRESS);
 		client.accept("application/json");
 		client.path("/restservice/getsomething/thisisatest");
 		Response r = client.get();
-		
+		String output = r.readEntity(String.class);
+		System.out.println(output);
 		
 		// Assert the values of the obect
-		//assertEquals("Birmingham", a.getCity());
-		//assertEquals("UK", a.getCountry());
-		//assertEquals("100", a.getTSNumber());
+		assertEquals("<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\"><soap:Body><output xmlns=\"http://cxf.camel.mycompany.com\">thisisatest something added by the backend REST service plus somethinig added by the SOAP service</output></soap:Body></soap:Envelope>", output);
 		
 	}
 
@@ -42,5 +42,6 @@ public class BlueprintXmlTest extends CamelBlueprintTestSupport {
 	protected String getBlueprintDescriptor() {
 		return "OSGI-INF/blueprint/blueprint.xml";
 	}
+	
 
 }

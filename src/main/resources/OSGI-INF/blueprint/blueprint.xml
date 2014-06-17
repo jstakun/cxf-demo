@@ -48,10 +48,11 @@
 
   <camelContext xmlns="http://camel.apache.org/schema/blueprint">
     <route>
-       <from uri="cxfrs:bean:restFrontend"/>
-<to uri="cxfrs:bean:restBackend"/>
-<process ref="soapProcessor"/>
-<to uri="cxf:bean:backendSOAPService"/>
+        <from uri="cxfrs:bean:restFrontend"/>
+        <to uri="cxfrs:bean:restBackend"/>
+        <log message="wow this is cool!"/>
+        <process ref="soapProcessor"/>
+        <to uri="cxf:bean:backendSOAPService"/>
     </route>
 </camelContext>
 </blueprint>
