@@ -278,7 +278,7 @@
         	<profile>cxf-demo</profile>
         	<features>camel-cxf fabric-cxf swagger</features>
         	<parentProfiles>feature-camel feature-cxf</parentProfiles>
-        	<version>2.0</version>
+        	<version>1.0</version>
       	</configuration>
       </plugin>
     </plugins>
