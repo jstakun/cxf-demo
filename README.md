@@ -13,7 +13,7 @@ To try it out point your browser at:
 
 ####Demo Steps
 
-1. Before the demo, delete the <route> from the blueprint.xml. Also start Fuse and execute fabric:create
+1. Before the demo, delete just the route from the blueprint.xml. Also start Fuse and execute fabric:create
 
 1. Create the route
 
