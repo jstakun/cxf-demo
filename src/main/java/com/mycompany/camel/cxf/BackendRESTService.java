@@ -14,8 +14,10 @@ public class BackendRESTService {
     @Path("/getsomething/{input}/")
     @Produces("application/json")
     public String getSomething(@PathParam("input") String input) {
-		System.out.println("Called the backend REST Service");
-        return input + " something added by the backend REST service";
+		
+		String output = "Backend REST service response"; 
+		System.out.println("Called the backend REST Service and returned: " + output);
+		return output; 
     }
 
 }

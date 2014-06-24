@@ -33,7 +33,7 @@ public class BackendSOAPService implements BackendSOAPServicePortType {
 	@Override
 	public String getSomethingFromSoap(String input) {
 		System.out.println("Called the SOAP service");
-		String result = input + " plus somethinig added by the SOAP service";
+		String result = "SOAP service response";
 		return result;
 	}
 

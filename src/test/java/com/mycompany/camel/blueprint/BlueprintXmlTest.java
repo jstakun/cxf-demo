@@ -9,7 +9,9 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.ResponseBuilder;
 
 import org.apache.camel.EndpointInject;
+import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.component.mock.MockEndpoint;
+import org.apache.camel.model.RouteDefinition;
 import org.apache.camel.test.blueprint.CamelBlueprintTestSupport;
 import org.apache.cxf.jaxrs.client.WebClient;
 import org.junit.Test;
@@ -21,22 +23,34 @@ public class BlueprintXmlTest extends CamelBlueprintTestSupport {
 	// Mock endpoints used to consume messages from the output endpoints and then perform assertions
 	@EndpointInject(uri = "mock:output")
 	protected MockEndpoint outputEndpoint;
+	
+	
+
+	@Override
+	public void setUp() throws Exception {
+		// TODO Auto-generated method stub
+		super.setUp();
+	}
 
 	@Test
-	public void testCamelRoute() throws Exception {
-		
+	public void testBackendSOAPService() throws Exception {
+				
 		// Call the REST endpoint
 		WebClient client = WebClient.create(ENDPOINT_ADDRESS);
 		client.accept("application/json");
-		client.path("/restservice/getsomething/thisisatest");
+		client.path("/restservice/getsomething/callSoapService");
 		Response r = client.get();
 		String output = r.readEntity(String.class);
-		System.out.println(output);
 		
-		// Assert the values of the obect
-		assertEquals("<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\"><soap:Body><output xmlns=\"http://cxf.camel.mycompany.com\">thisisatest something added by the backend REST service plus somethinig added by the SOAP service</output></soap:Body></soap:Envelope>", output);
+		assertEquals("<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\"><soap:Body><output xmlns=\"http://cxf.camel.mycompany.com\">SOAP service response</output></soap:Body></soap:Envelope>", output);
 		
+		client.replacePath("/restservice/getsomething/callRestService");
+		r = client.get();
+		output = r.readEntity(String.class);
+		
+		assertEquals("Backend REST service response", output);
 	}
+
 
 	@Override
 	protected String getBlueprintDescriptor() {

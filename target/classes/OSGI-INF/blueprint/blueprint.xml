@@ -49,17 +49,10 @@
   <camelContext xmlns="http://camel.apache.org/schema/blueprint">
     <route>
         <from uri="cxfrs:bean:restFrontend"/>
-        <choice>
-            <when>
-                <simple>${in.body} == "callRestService"</simple>
-                <to uri="cxfrs:bean:restBackend"/>
-            </when>
-            <when>
-                <simple>${in.body} == "callSoapService"</simple>
-                <process ref="soapProcessor"/>
-                <to uri="cxf:bean:backendSOAPService"/>
-            </when>
-        </choice>
+        <to uri="cxfrs:bean:restBackend"/>
+        <log message="wow this is cool!"/>
+        <process ref="soapProcessor"/>
+        <to uri="cxf:bean:backendSOAPService"/>
     </route>
 </camelContext>
 </blueprint>
