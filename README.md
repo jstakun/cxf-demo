@@ -3,6 +3,8 @@
 This demo shows a frontend REST service that sends messages through a Content Based Router that routes messages either
 to a backend REST service, or a backend SOAP service depending on the message content.
 
+(https://github.com/jonmwalton/cxf-demo/blob/master/cxf-demo-route.png "Demo route")
+
 To try it out point your browser at:
 
 ####Call the backend SOAP Service
