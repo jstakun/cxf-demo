@@ -23,7 +23,7 @@
  
   <bean id="backendRESTService" class="com.mycompany.camel.cxf.BackendRESTService" />
   
-  <cxf:rsServer id="restFrontend" address="http://192.168.122.90:9090/route" serviceClass="com.mycompany.camel.cxf.FrontendRESTService"/>
+  <cxf:rsServer id="restFrontend" address="http://localhost:9090/route" serviceClass="com.mycompany.camel.cxf.FrontendRESTService"/>
   <cxf:rsClient id="restBackend" address="http://localhost:9091/rest" serviceClass="com.mycompany.camel.cxf.BackendRESTService"/>
 
   <cxf:cxfEndpoint id="backendSOAPService"
