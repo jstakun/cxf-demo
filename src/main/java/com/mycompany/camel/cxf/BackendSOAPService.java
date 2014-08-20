@@ -16,12 +16,6 @@
  */
 package com.mycompany.camel.cxf;
 
-//import com.tmg.fuse.poc.account.InputAccount;
-import javax.xml.bind.JAXBElement;
-import javax.xml.ws.Holder;
-
-
-
 /**
  * This is the implementation of the real web service
  *

@@ -1,14 +1,6 @@
 package com.mycompany.camel.cxf;
 
-import org.apache.camel.Exchange;
-import org.apache.camel.Message;
-import org.apache.camel.Processor;
-import org.apache.camel.component.cxf.common.message.*;
-import org.apache.cxf.message.MessageContentsList;
-
 import java.io.StringWriter;
-import java.util.List;
-import java.util.Map;
 
 import javax.xml.soap.MessageFactory;
 import javax.xml.soap.SOAPBody;
@@ -20,6 +12,11 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
+
+import org.apache.camel.Exchange;
+import org.apache.camel.Message;
+import org.apache.camel.Processor;
+import org.apache.camel.component.cxf.common.message.CxfConstants;
 
 
 

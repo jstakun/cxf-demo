@@ -23,10 +23,10 @@
  
   <bean id="backendRESTService" class="com.mycompany.camel.cxf.BackendRESTService" />
   
-<cxf:rsServer id="restFrontend" address="http://localhost:9090/route" serviceClass="com.mycompany.camel.cxf.FrontendRESTService"/>
-<cxf:rsClient id="restBackend" address="http://localhost:9091/rest" serviceClass="com.mycompany.camel.cxf.BackendRESTService"/>
+  <cxf:rsServer id="restFrontend" address="http://192.168.122.90:9090/route" serviceClass="com.mycompany.camel.cxf.FrontendRESTService"/>
+  <cxf:rsClient id="restBackend" address="http://localhost:9091/rest" serviceClass="com.mycompany.camel.cxf.BackendRESTService"/>
 
-<cxf:cxfEndpoint id="backendSOAPService"
+  <cxf:cxfEndpoint id="backendSOAPService"
                    address="http://localhost:9092/backendsoapservice"
                    endpointName="s:BackendSOAPPort"
                    serviceName="s:BackendSOAPServiceService"
@@ -36,19 +36,20 @@
     	<cxf:properties>
 	        <entry key="dataFormat" value="MESSAGE"/>
 	    </cxf:properties>
-    </cxf:cxfEndpoint>
+  </cxf:cxfEndpoint>
     
- <bean id="realSOAPService" class="com.mycompany.camel.cxf.RealSOAPServiceBean"
+  <bean id="realSOAPService" class="com.mycompany.camel.cxf.RealSOAPServiceBean"
         init-method="start" destroy-method="stop">
     	<!-- url of the real web service we have proxied -->
     	<property name="url" value="http://localhost:9092/backendsoapservice"/>
-  	</bean>
+  </bean>
   	
-  	<bean id="soapProcessor" class="com.mycompany.camel.cxf.SOAPProcessor"></bean>
+  <bean id="soapProcessor" class="com.mycompany.camel.cxf.SOAPProcessor"></bean>
 
   <camelContext xmlns="http://camel.apache.org/schema/blueprint">
     <route>
         <from uri="cxfrs:bean:restFrontend"/>
+        <log message="Rest service has been executed version 2" loggingLevel="INFO"/>
         <choice>
             <when>
                 <simple>${in.body} == "callRestService"</simple>
