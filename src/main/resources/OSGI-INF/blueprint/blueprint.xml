@@ -12,22 +12,38 @@
              http://www.osgi.org/xmlns/blueprint/v1.0.0 http://www.osgi.org/xmlns/blueprint/v1.0.0/blueprint.xsd
              http://cxf.apache.org/blueprint/jaxrs http://http://cxf.apache.org/schemas/blueprint/jaxrs.xsd">
 
-  <!-- Defined the real JAXRS back end service   -->
+  <!-- OSGI blueprint property placeholder -->
+  <cm:property-placeholder persistent-id="com.mycompany.camel.blueprint">
+        <cm:default-properties>
+            <cm:property name="host" value="localhost"/>
+            <cm:property name="frontendRestPort" value="9090"/>
+            <cm:property name="backendRestPort" value="9091"/>
+            <cm:property name="backendSoapPort" value="9092"/>
+        </cm:default-properties>
+  </cm:property-placeholder>
+  
+  <!-- Frontend REST service -->
+  
+  <cxf:rsServer id="restFrontend" address="http://${host}:${frontendRestPort}/route" serviceClass="com.mycompany.camel.cxf.FrontendRESTService"/>
+  
+  <!-- Backend REST service   -->
+  
   <jaxrs:server id="restService"
-                address="http://localhost:9091/rest" 
+                address="http://${host}:${backendRestPort}/rest" 
                 staticSubresourceResolution="true">
     <jaxrs:serviceBeans>
       <ref component-id="backendRESTService"/>
     </jaxrs:serviceBeans>       
   </jaxrs:server>
  
+  <cxf:rsClient id="restBackend" address="http://${host}:${backendRestPort}/rest" serviceClass="com.mycompany.camel.cxf.BackendRESTService"/>
+
   <bean id="backendRESTService" class="com.mycompany.camel.cxf.BackendRESTService" />
   
-  <cxf:rsServer id="restFrontend" address="http://localhost:9090/route" serviceClass="com.mycompany.camel.cxf.FrontendRESTService"/>
-  <cxf:rsClient id="restBackend" address="http://localhost:9091/rest" serviceClass="com.mycompany.camel.cxf.BackendRESTService"/>
-
+  <!-- Backend SOAP service -->
+  
   <cxf:cxfEndpoint id="backendSOAPService"
-                   address="http://localhost:9092/backendsoapservice"
+                   address="http://${host}:${backendSoapPort}/backendsoapservice"
                    endpointName="s:BackendSOAPPort"
                    serviceName="s:BackendSOAPServiceService"
                    serviceClass="com.mycompany.camel.cxf.BackendSOAPServicePortType"
@@ -41,15 +57,21 @@
   <bean id="realSOAPService" class="com.mycompany.camel.cxf.RealSOAPServiceBean"
         init-method="start" destroy-method="stop">
     	<!-- url of the real web service we have proxied -->
-    	<property name="url" value="http://localhost:9092/backendsoapservice"/>
+    	<property name="url" value="http://${host}:${backendSoapPort}/backendsoapservice"/>
   </bean>
   	
+  <!-- Message Processors -->
+  
   <bean id="soapProcessor" class="com.mycompany.camel.cxf.SOAPProcessor"></bean>
+  
+  <bean id="otherProcessor" class="com.mycompany.camel.cxf.OtherProcessor"></bean>
+  
+  <!-- Camel route -->
 
   <camelContext xmlns="http://camel.apache.org/schema/blueprint">
     <route>
         <from uri="cxfrs:bean:restFrontend"/>
-        <log message="Rest service has been executed version 2" loggingLevel="INFO"/>
+        <log message="Rest service version 1.0 has been executed with ${body}" loggingLevel="INFO"/>
         <choice>
             <when>
                 <simple>${in.body} == "callRestService"</simple>
@@ -60,7 +82,12 @@
                 <process ref="soapProcessor"/>
                 <to uri="cxf:bean:backendSOAPService"/>
             </when>
+            <otherwise>
+                <log message="Unrecognised service ${in.body}" loggingLevel="ERROR"/>
+                <bean ref="otherProcessor" beanType="com.mycompany.camel.cxf.OtherProcessor"/>
+            </otherwise>
         </choice>
     </route>
 </camelContext>
+
 </blueprint>

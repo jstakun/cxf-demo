@@ -20,7 +20,6 @@ public class BlueprintXmlTest extends CamelBlueprintTestSupport {
 
 	@Override
 	public void setUp() throws Exception {
-		// TODO Auto-generated method stub
 		super.setUp();
 	}
 
@@ -41,6 +40,12 @@ public class BlueprintXmlTest extends CamelBlueprintTestSupport {
 		output = r.readEntity(String.class);
 		
 		assertEquals("Backend REST service response", output);
+		
+		client.replacePath("/restservice/getsomething/test");
+		r = client.get();
+		output = r.readEntity(String.class);
+		
+		assertEquals("Unrecognized service [test]", output);
 	}
 
 
